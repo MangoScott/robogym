@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RallyPerfect | Interactive Business Proposal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Professional (Cream, Dark Slate, Muted Teal Accent) -->
+    <!-- Application Structure Plan: A single-page dashboard with a sticky navigation bar (The Vision, The Model, Financials, The Bottom Line). The core is an an interactive 'Financials' section where users can toggle between Year 1 and Year 2 projections, dynamically updating charts and key metrics. This structure allows investors to quickly grasp the high-level concept and then dive deep into the financial viability and ROI, which is their primary concern. -->
+    <!-- Visualization & Content Choices: Revenue Breakdown -> Doughnut Chart (Chart.js) -> Toggle interaction -> Justifies showing revenue composition change. Profit Projection -> Bar Chart (Chart.js) -> Toggle interaction -> Clear comparison of revenue vs. costs. Payback Period -> Line Chart (Chart.js) -> Static -> Visually demonstrates the time to profitability, a key investor metric. All interactions are driven by a simple year-selector to maintain focus and usability. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF7;
+            color: #334155;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #14B8A6;
+        }
+        .active-toggle {
+            background-color: #14B8A6 !important;
+            color: #FFFFFF !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-slate-800">RallyPerfect</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#vision" class="nav-link text-slate-600 font-medium">The Vision</a>
+                <a href="#model" class="nav-link text-slate-600 font-medium">The Model</a>
+                <a href="#enforcement" class="nav-link text-slate-600 font-medium">Enforcement</a>
+                <a href="#financials" class="nav-link text-slate-600 font-medium">Financials</a>
+                <a href="#roi" class="nav-link text-slate-600 font-medium">The Bottom Line</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="py-20 md:py-32 bg-white">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl md:text-6xl font-bold text-slate-900 mb-4">The Future of Racket Sports and Fitness.</h2>
+                <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto">
+                    A premium, fully automated facility offering 24/7 access to tennis, padel, pickleball, a medium sized gym, and a basketball court. Our staff-free, "vending machine" model maximizes profitability through low overhead and a high-value membership experience.
+                </p>
+            </div>
+        </section>
+
+        <section id="vision" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-800">The Vision</h3>
+                    <p class="text-slate-500 mt-2">Addressing a clear market need with an innovative solution.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold text-slate-700 mb-4">The Market Opportunity</h4>
+                        <p class="text-slate-600 leading-relaxed">The demand for racket sports is soaring, particularly for padel and pickleball. However, many communities lack dedicated, accessible, and modern facilities. Traditional clubs present barriers like high costs, limited hours, and inconvenient booking processes. RallyPerfect fills this gap by providing an unparalleled, flexible experience that is always available.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-semibold text-slate-700 mb-4">Our Solution: A 24/7 Automated Facility</h4>
+                        <p class="text-slate-600 leading-relaxed mb-6">The entire facility is built around a fully automated, staff-free model. A custom system manages court booking and facility access through a simple mobile app, keeping operational costs low and member satisfaction high.</p>
+                        <div class="grid grid-cols-4 gap-4 text-center">
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <span class="text-4xl">🎾</span>
+                                <p class="font-semibold mt-2">2 Tennis Courts</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <span class="text-4xl">⚫</span>
+                                <p class="font-semibold mt-2">2 Padel Courts</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <span class="text-4xl">🥒</span>
+                                <p class="font-semibold mt-2">4 Pickleball Courts</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm">
+                                <span class="text-4xl">🏀</span>
+                                <p class="font-semibold mt-2">1 Basketball Court</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="model" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-800">The Business Model</h3>
+                    <p class="text-slate-500 mt-2">Diversified revenue streams ensure stable, predictable growth.</p>
+                </div>
+                <!-- Updated grid layout to be 4 columns across all items for a cleaner look -->
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-teal-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-teal-800 mb-2">Membership Tiers</h4>
+                        <p class="text-teal-700 text-sm">Our primary revenue source now includes access to all sports, the medium-sized gym, and the basketball court, offering unparalleled value.</p>
+                        <div class="mt-4 text-teal-900">
+                            <p><span class="font-bold">Single:</span> $29.99 / month</p>
+                            <p><span class="font-bold">Couple:</span> $49.99 / month (17% discount)</p>
+                            <p><span class="font-bold">Family:</span> $69.99 / month (25% discount)</p>
+                        </div>
+                    </div>
+                     <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Court Rentals</h4>
+                        <p class="text-slate-700 text-sm">Members enjoy significantly reduced rates, driving value and encouraging frequent play. Non-member rates capture casual demand.</p>
+                        <div class="mt-4 text-slate-900">
+                            <p><span class="font-bold">Tennis/Padel:</span> $20/hr prime, $10/hr off-peak</p>
+                            <p><span class="font-bold">Pickleball:</span> $10/hr prime, $5/hr off-peak</p>
+                            <p class="mt-2"><span class="font-bold">Non-Member Rate:</span> $40/hr tennis/padel, $35/hr pickleball</p>
+                        </div>
+                    </div>
+                     <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Day Pass</h4>
+                        <p class="text-slate-700 text-sm">A convenient day pass option for guests and curious potential members, offering full access to the gym and basketball court, but not to court reservations. This is a high-margin, low-effort revenue stream.</p>
+                        <p class="mt-4 font-bold text-slate-900">$10 / day pass</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Pro Shop Vending</h4>
+                        <p class="text-slate-700 text-sm">A fully automated, vending machine-style pro shop offers essentials like grips, balls, and paddles for a high-margin, zero-labor revenue stream.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Racquet Stringing</h4>
+                        <p class="text-slate-700 text-sm">A secure, automated drop-off/pickup lockbox system provides a convenient, profitable service with minimal operational complexity. This service is a key value-add for serious players.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Robotic Barista</h4>
+                        <p class="text-slate-700 text-sm">An automated barista station provides on-demand coffee, lattes, and espresso. This high-margin service enhances the member experience without increasing staffing needs.</p>
+                    </div>
+                    <!-- Re-adding the gym and basketball court to the business model description for clarity -->
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Medium-Sized Gym</h4>
+                        <p class="text-slate-700 text-sm">A thoughtfully-sized, 24/7 access gym with a wide range of cardio machines, free weights, and strength training equipment, now included with all membership tiers to serve members' holistic fitness needs.</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold text-slate-800 mb-2">Basketball Court</h4>
+                        <p class="text-slate-700 text-sm">A dedicated half-court for pickup games and warm-ups, included in all memberships to attract a broader recreational audience.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="enforcement" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-800">Enforcement & Security</h3>
+                    <p class="text-slate-500 mt-2">Our automated system ensures members-only access and facility integrity.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h4 class="text-2xl font-semibold text-slate-700 mb-4">Automated Access Control</h4>
+                        <p class="text-slate-600 leading-relaxed">Each court reservation made through the mobile app generates a unique, time-sensitive access code. This code is the only way to unlock the court gates and the main facility doors, ensuring only members and their registered guests can enter during their allotted time.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl font-semibold text-slate-700 mb-4">Smart Monitoring</h4>
+                        <p class="text-slate-600 leading-relaxed mb-6">High-resolution cameras and motion sensors are strategically placed throughout the facility to deter unauthorized use. This technology not only ensures a safe environment but also provides a record of all facility access, allowing us to enforce our terms of service effectively without the need for on-site staff.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-800">Financial Projections</h3>
+                    <p class="text-slate-500 mt-2">A data-driven look at our path to profitability.</p>
+                </div>
+                <div class="flex justify-center mb-10">
+                    <div class="bg-white p-1 rounded-full shadow-md">
+                        <button id="btnYear1" class="px-6 py-2 rounded-full text-sm font-semibold active-toggle">Year 1</button>
+                        <button id="btnYear2" class="px-6 py-2 rounded-full text-sm font-semibold text-slate-600">Year 2</button>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-3 gap-8 items-start">
+                    <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-sm">
+                        <h4 class="text-xl font-semibold text-slate-700 mb-4">Key Metrics: <span id="metricYear">Year 1</span></h4>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm text-slate-500">Projected Members</p>
+                                <p id="metricMembers" class="text-2xl font-bold text-teal-600">650</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500">Total Annual Revenue</p>
+                                <p id="metricRevenue" class="text-2xl font-bold text-teal-600">$965,522</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500">Annual Net Profit</p>
+                                <p id="metricProfit" class="text-2xl font-bold text-teal-600">$735,522</p>
+                            </div>
+                             <div>
+                                <p class="text-sm text-slate-500">Annual Operating Costs</p>
+                                <p class="text-lg font-semibold text-slate-600">$230,000</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-slate-500">Initial Investment</p>
+                                <p class="text-lg font-semibold text-slate-600">$1,460,000</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-2 grid md:grid-cols-2 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                             <h4 class="text-lg font-semibold text-slate-700 mb-2 text-center">Revenue Breakdown</h4>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-sm">
+                             <h4 class="text-lg font-semibold text-slate-700 mb-2 text-center">Profit Projection</h4>
+                            <div class="chart-container">
+                                <canvas id="profitChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roi" class="py-16 md:py-24">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl md:text-4xl font-bold text-slate-800">The Bottom Line</h3>
+                    <p class="text-slate-500 mt-2">A strong return on investment and a rapid payback period.</p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-slate-50 p-8 rounded-lg">
+                        <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Year 1 ROI</p>
+                        <p class="text-5xl font-bold text-teal-600 mt-2">50.4%</p>
+                    </div>
+                    <div class="bg-teal-600 text-white p-8 rounded-lg">
+                        <p class="text-teal-200 text-sm font-medium uppercase tracking-wider">Payback Period</p>
+                        <p class="text-5xl font-bold mt-2">~1.98 Years</p>
+                    </div>
+                    <div class="bg-slate-50 p-8 rounded-lg">
+                        <p class="text-slate-500 text-sm font-medium uppercase tracking-wider">Year 2 ROI</p>
+                        <p class="text-5xl font-bold text-teal-600 mt-2">116.5%</p>
+                    </div>
+                </div>
+                 <div class="mt-12 bg-white p-6 rounded-lg shadow-sm">
+                     <h4 class="text-lg font-semibold text-slate-700 mb-4 text-center">Path to Profitability (Cumulative Net Profit)</h4>
+                    <div class="chart-container !max-w-4xl !h-80">
+                        <canvas id="paybackChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p class="font-bold text-lg text-white">RallyPerfect</p>
+            <p class="text-sm mt-1">Ready to invest in the future of sports?</p>
+        </div>
+    </footer>
+
+    <script>
+        const financialData = {
+            year1: {
+                members: 650,
+                revenue: 965522,
+                profit: 735522,
+                revenueBreakdown: {
+                    membership: 343122,
+                    rental: 455600,
+                    vending: 35500,
+                    stringing: 18900,
+                    barista: 106400,
+                    dayPass: 6000
+                }
+            },
+            year2: {
+                members: 1300,
+                revenue: 1931044,
+                profit: 1701044,
+                revenueBreakdown: {
+                    membership: 686244,
+                    rental: 911200,
+                    vending: 71000,
+                    stringing: 37800,
+                    barista: 212800,
+                    dayPass: 12000
+                }
+            },
+            investment: 1460000,
+            opCosts: 230000
+        };
+
+        let revenueChart, profitChart, paybackChart;
+        let currentYear = 'year1';
+
+        const formatCurrency = (value) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
+
+        function updateMetrics(year) {
+            const data = financialData[year];
+            document.getElementById('metricYear').textContent = year === 'year1' ? 'Year 1' : 'Year 2';
+            document.getElementById('metricMembers').textContent = data.members;
+            document.getElementById('metricRevenue').textContent = formatCurrency(data.revenue);
+            document.getElementById('metricProfit').textContent = formatCurrency(data.profit);
+        }
+
+        function createRevenueChart(year) {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            const data = financialData[year].revenueBreakdown;
+            const labels = ['Membership', 'Court Rental', 'Pro Shop Vending', 'Racquet Stringing', 'Robotic Barista', 'Day Pass'];
+            const datasetData = [
+                data.membership, 
+                data.rental, 
+                data.vending, 
+                data.stringing,
+                data.barista,
+                data.dayPass
+            ];
+
+            if (revenueChart) {
+                revenueChart.destroy();
+            }
+
+            revenueChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: datasetData,
+                        backgroundColor: ['#14B8A6', '#5EEAD4', '#99F6E4', '#CCFBF1', '#E0F8F1', '#a3e635'],
+                        borderColor: '#FDFBF7',
+                        borderWidth: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += formatCurrency(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createProfitChart(year) {
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            const data = financialData[year];
+            
+            if (profitChart) {
+                profitChart.destroy();
+            }
+
+            profitChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Revenue', 'Net Profit'],
+                    datasets: [{
+                        label: 'Amount',
+                        data: [data.revenue, data.profit],
+                        backgroundColor: ['#14B8A6', '#5EEAD4'],
+                        borderColor: ['#0F766E', '#2DD4BF'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => formatCurrency(context.raw)
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                callback: (value) => formatCurrency(value)
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createPaybackChart() {
+            const ctx = document.getElementById('paybackChart').getContext('2d');
+            const cumulativeProfitY1 = financialData.year1.profit - financialData.investment;
+            const cumulativeProfitY2 = cumulativeProfitY1 + financialData.year2.profit;
+
+            paybackChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Start', 'End of Year 1', 'End of Year 2'],
+                    datasets: [{
+                        label: 'Cumulative Net Profit',
+                        data: [-financialData.investment, cumulativeProfitY1, cumulativeProfitY2],
+                        borderColor: '#14B8A6',
+                        backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                             callbacks: {
+                                label: (context) => `Cumulative Profit: ${formatCurrency(context.raw)}`
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                callback: (value) => formatCurrency(value)
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnYear1 = document.getElementById('btnYear1');
+            const btnYear2 = document.getElementById('btnYear2');
+
+            function switchYear(year) {
+                currentYear = year;
+                updateMetrics(currentYear);
+                createRevenueChart(currentYear);
+                createProfitChart(currentYear);
+
+                if (year === 'year1') {
+                    btnYear1.classList.add('active-toggle');
+                    btnYear2.classList.remove('active-toggle');
+                } else {
+                    btnYear2.classList.add('active-toggle');
+                    btnYear1.classList.remove('active-toggle');
+                }
+            }
+
+            btnYear1.addEventListener('click', () => switchYear('year1'));
+            btnYear2.addEventListener('click', () => switchYear('year2'));
+
+            switchYear('year1');
+            createPaybackChart();
+        });
+    </script>
+</body>
+</html>
